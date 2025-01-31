@@ -6,6 +6,7 @@ const allocator = gpa.allocator();
 
 pub fn main() !void {
     defer std.debug.assert(gpa.deinit() == .ok);
+
     const to_encode =
         \\Hi from zig
         \\
@@ -18,11 +19,13 @@ pub fn main() !void {
         \\Bye from zig
     ;
     std.debug.print("- to encode:\n{s}\n", .{to_encode});
+
     const encoded = try br.encode(allocator, to_encode);
     defer allocator.free(encoded);
     std.debug.print("\n- encoded:\n\n", .{});
     std.debug.print("{s} \n", .{encoded});
+
     const decoded = try br.decode(allocator, encoded);
-    std.debug.print("\n- decoded:\n{s}\n", .{decoded});
     defer allocator.free(decoded);
+    std.debug.print("\n- decoded:\n{s}\n", .{decoded});
 }
