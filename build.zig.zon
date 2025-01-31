@@ -1,0 +1,16 @@
+.{
+    .name = "zig-brotli",
+    .version = "0.0.0",
+    .dependencies = .{
+        .@"brotli.zig" = .{
+            .url = "git+https://github.com/0x546F6D/brotli.zig#5f4507b310e8105fb722f353efd9969ce8ca4821",
+            .hash = "1220ad9f09cda3bf8c1ae31f3445c34adefc5ac55b48db774936756434164d4afea8",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "examples",
+    },
+}
