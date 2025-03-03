@@ -1,10 +1,11 @@
 .{
-    .name = "zig-brotli",
+    .name = .brotli,
+    .fingerprint = 0xba7766d3e39ead4a,
     .version = "0.0.0",
     .dependencies = .{
-        .@"brotli.zig" = .{
-            .url = "git+https://github.com/0x546F6D/brotli.zig#5f4507b310e8105fb722f353efd9969ce8ca4821",
-            .hash = "1220ad9f09cda3bf8c1ae31f3445c34adefc5ac55b48db774936756434164d4afea8",
+        .brotli_build = .{
+            .url = "git+https://github.com/0x546F6D/brotli.zig#581ca6339b49bcb7d807d3b63de8a6377e94eb8a",
+            .hash = "brotli_build-0.0.0-KJ9D250RAACkl9IuQLOHB8l5H2jtY6uRbtLqK0EzLnXs",
         },
     },
     .paths = .{

@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/brotli.zig"),
     });
 
-    const brotli_c = b.dependency("brotli.zig", .{
+    const brotli_c = b.dependency("brotli_build", .{
         .target = target,
         .optimize = optimize,
     });
