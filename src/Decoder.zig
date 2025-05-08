@@ -107,12 +107,10 @@ pub fn decode(self: *Decoder, encoded: []const u8) ![]const u8 {
                 // send the decoded buffer back even if more input is needed:
                 // - for stream: it's normal since there is no FINISH flag
                 // - for one_shot: FINISH flag might be missing but the whole input has alredy been provided
-                // log.info("need_more_input: total_out = {}", .{dec_total});
                 self.total_output_size = dec_total;
                 return self.decoded_data.toOwnedSlice(self.allocator);
             },
             .need_more_output => {
-                // log.info("need_more_output: dec_size = {}, total_size = {}", .{ dec_size, dec_total });
                 // double the size of the buffer for output
                 buf_size = buf_size * 2;
                 self.allocator.free(buf);
