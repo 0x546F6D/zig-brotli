@@ -4,8 +4,9 @@
     .version = "0.0.0",
     .dependencies = .{
         .brotli_build = .{
-            .url = "git+https://github.com/0x546F6D/brotli.zig#581ca6339b49bcb7d807d3b63de8a6377e94eb8a",
-            .hash = "brotli_build-0.0.0-KJ9D250RAACkl9IuQLOHB8l5H2jtY6uRbtLqK0EzLnXs",
+            .path = "../brotli.zig/",
+            // .url = "git+https://github.com/0x546F6D/brotli.zig#581ca6339b49bcb7d807d3b63de8a6377e94eb8a",
+            // .hash = "brotli_build-0.0.0-KJ9D250RAACkl9IuQLOHB8l5H2jtY6uRbtLqK0EzLnXs",
         },
     },
     .paths = .{
