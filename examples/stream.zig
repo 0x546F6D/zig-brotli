@@ -42,12 +42,14 @@ pub fn main() !void {
         start_idx += CHUNK_SIZE;
         stop_idx = @min(to_encode.len, stop_idx + CHUNK_SIZE);
     }
+    _ = try decoder.decode(&Encoder.streamEnd);
 
     std.debug.print(
         \\ -----------------------------------------
         \\Stream Compression/Decompression complete.
         \\Total compressed size: {} bytes
         \\Total decompressed size: {} bytes
+        \\
     , .{ encoder.total_output_size, decoder.total_output_size });
 }
 

@@ -4,6 +4,11 @@ const c = @import("brotli.zig").c;
 const log = std.log.scoped(.brotli_encoder);
 const Encoder = @This();
 
+// https://datatracker.ietf.org/doc/html/rfc7932#section-9.2
+// 3 represent the ISLAST and ISEMPTY bits
+// of the Meta-Block Header
+pub const streamEnd = [1]u8{3};
+
 allocator: std.mem.Allocator,
 settings: Settings,
 state: ?*c.BrotliEncoderState = null,
@@ -29,7 +34,7 @@ pub const Process = enum(u2) {
     stream,
 };
 
- pub const Operation = enum(c_uint) {
+pub const Operation = enum(c_uint) {
     process = c.BROTLI_OPERATION_PROCESS,
     flush = c.BROTLI_OPERATION_FLUSH,
     finish = c.BROTLI_OPERATION_FINISH,
@@ -106,7 +111,12 @@ pub fn encode(self: *Encoder, input: []const u8) ![]const u8 {
 
     const result = switch (self.settings.process) {
         .one_shot => self.encodeOneShot(input, &buf) catch c.BROTLI_FALSE,
-        .stream => self.encodeStream(input, &buf) catch c.BROTLI_FALSE,
+        .stream => r: {
+            if (input.len > 0)
+                break :r self.encodeStream(input, &buf) catch c.BROTLI_FALSE
+            else
+                return self.allocator.dupe(u8, input);
+        },
     };
 
     if (result == c.BROTLI_TRUE)
@@ -117,7 +127,7 @@ pub fn encode(self: *Encoder, input: []const u8) ![]const u8 {
     }
 }
 
-pub fn encodeOneShot(self: *Encoder, input: []const u8, output: *[]u8) !c_int {
+fn encodeOneShot(self: *Encoder, input: []const u8, output: *[]u8) !c_int {
     var enc_size = output.len;
 
     // fn BrotliEncoderCompress(
@@ -145,20 +155,13 @@ pub fn encodeOneShot(self: *Encoder, input: []const u8, output: *[]u8) !c_int {
 }
 
 /// Encoder encode Stream
-pub fn encodeStream(self: *Encoder, input: []const u8, output: *const []u8) !c_int {
-    var enc_size = output.len;
+fn encodeStream(self: *Encoder, input: []const u8, output: *const []u8) !c_int {
+    var enc_left = output.len;
     var result = c.BROTLI_TRUE;
 
-    if (enc_size == 0) {
+    if (enc_left == 0) {
         log.err("Output buffer needs at least one byte.", .{});
         return c.BROTLI_FALSE;
-    }
-
-    // Handle the special case of empty input.
-    if (input.len == 0) {
-        output.*[0] = 6;
-        self.total_output_size = 1;
-        return c.BROTLI_TRUE;
     }
 
     var available_in: usize = input.len;
@@ -180,12 +183,13 @@ pub fn encodeStream(self: *Encoder, input: []const u8, output: *const []u8) !c_i
         c.BROTLI_OPERATION_FLUSH,
         @ptrCast(&available_in),
         @ptrCast(&next_in),
-        @ptrCast(&enc_size),
+        @ptrCast(&enc_left),
         @ptrCast(&next_out),
         @ptrCast(&total_out),
     );
 
-    self.stream_output_size = total_out - self.total_output_size;
+    self.stream_output_size = output.len - enc_left;
     self.total_output_size = total_out;
+
     return result;
 }

@@ -101,6 +101,7 @@ pub fn decode(self: *Decoder, encoded: []const u8) ![]const u8 {
 
         // check that we really got all the output before asking for more input
         if (dec_left == 0 and result == .need_more_input) result = .need_more_output;
+        // log.info("result: {}", .{result});
 
         switch (result) {
             .need_more_input, .success => {
