@@ -29,7 +29,7 @@ pub const Process = enum(u2) {
     stream,
 };
 
-pub const Operation = enum(c_uint) {
+ pub const Operation = enum(c_uint) {
     process = c.BROTLI_OPERATION_PROCESS,
     flush = c.BROTLI_OPERATION_FLUSH,
     finish = c.BROTLI_OPERATION_FINISH,

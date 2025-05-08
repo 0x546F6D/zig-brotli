@@ -124,11 +124,6 @@ pub fn decode(self: *Decoder, encoded: []const u8) ![]const u8 {
                 log.err("got decoding error: {s}", .{getError(self.state)});
                 return DecodeError.GeneralError;
             },
-            // .success => {
-            //     // log.info("success: dec_size = {}, total_size = {}", .{ dec_size, dec_total });
-            //     self.total_output_size = dec_total;
-            //     return self.decoded_data.toOwnedSlice(self.allocator);
-            // },
         }
     }
 
