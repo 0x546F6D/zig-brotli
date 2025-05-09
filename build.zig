@@ -14,8 +14,8 @@ pub fn build(b: *std.Build) void {
     });
     brotli_mod.linkLibrary(brotli_c.artifact("brotli_lib"));
 
-    const build_basic = b.option(bool, "mem", "Build basic example executable (default:false)") orelse false;
-    if (build_basic) {
+    const build_mem = b.option(bool, "mem", "Build basic example executable (default:false)") orelse false;
+    if (build_mem) {
         const exe = b.addExecutable(.{
             .name = "mem",
             .root_source_file = b.path("examples/mem_to_mem.zig"),
@@ -23,32 +23,6 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         });
         exe.root_module.addImport("brotli", brotli_mod);
-        b.installArtifact(exe);
-    }
-
-    const build_encode = b.option(bool, "enc", "Build stream example executable (default:false)") orelse false;
-    if (build_encode) {
-        const exe = b.addExecutable(.{
-            .name = "encode",
-            .root_source_file = b.path("examples/stream_enc.zig"),
-            .target = target,
-            .optimize = optimize,
-        });
-        // exe.root_module.addImport("brotli", brotli_mod);
-        exe.linkLibrary(brotli_c.artifact("brotli_lib"));
-        b.installArtifact(exe);
-    }
-
-    const build_dec = b.option(bool, "dec", "Build decode example executable (default:false)") orelse false;
-    if (build_dec) {
-        const exe = b.addExecutable(.{
-            .name = "decode",
-            .root_source_file = b.path("examples/stream_dec.zig"),
-            .target = target,
-            .optimize = optimize,
-        });
-        // exe.root_module.addImport("brotli", brotli_mod);
-        exe.linkLibrary(brotli_c.artifact("brotli_lib"));
         b.installArtifact(exe);
     }
 
@@ -60,9 +34,7 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
         });
-        // exe.root_module.addImport("brotli", brotli_mod);
         exe.root_module.addImport("brotli", brotli_mod);
-        // exe.linkLibrary(brotli_c.artifact("brotli_lib"));
         b.installArtifact(exe);
     }
 }
