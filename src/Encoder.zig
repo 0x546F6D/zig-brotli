@@ -1,8 +1,5 @@
-const std = @import("std");
-const c = @import("brotli.zig").c;
-
-const log = std.log.scoped(.brotli_encoder);
 const Encoder = @This();
+const log = std.log.scoped(.brotli_encoder);
 
 // https://datatracker.ietf.org/doc/html/rfc7932#section-9.2
 // 3 represent the ISLAST and ISEMPTY bits
@@ -193,3 +190,6 @@ fn encodeStream(self: *Encoder, input: []const u8, output: *const []u8) !c_int {
 
     return result;
 }
+
+const std = @import("std");
+pub const c = @import("c");

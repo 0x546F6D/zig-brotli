@@ -1,8 +1,5 @@
-const std = @import("std");
-const c = @import("brotli.zig").c;
-
-const log = std.log.scoped(.brotli_decoder);
 const Decoder = @This();
+const log = std.log.scoped(.brotli_decoder);
 
 allocator: std.mem.Allocator,
 state: ?*c.BrotliDecoderState = null,
@@ -129,3 +126,6 @@ pub fn decode(self: *Decoder, encoded: []const u8) ![]const u8 {
     // should never reach that point
     unreachable;
 }
+
+const std = @import("std");
+pub const c = @import("c");
